@@ -1,7 +1,10 @@
 import { useTaskContext } from "../context/TaskContext.jsx";
+import { useHabitContext } from "../context/HabitContext.jsx";
 
 function Header({ activePage, setActivePage }) {
-  const {state} = useTaskContext();
+  const { state: taskState } = useTaskContext();
+  const { state: habitState } = useHabitContext();
+
   return (
     <div className="flex justify-between items-center bg-amber-100 py-5 h-56 px-5">
       <div className="flex flex-col gap-2 ">
@@ -34,10 +37,23 @@ function Header({ activePage, setActivePage }) {
 
       <div className="flex gap-4">
         <div className="flex flex-col items-center">
-          <p>{state.tasks.filter((task) => task.completed === false).length}/{state.tasks.length}</p>
-        <p>tasks left</p>
+          <p>
+            {taskState.tasks.filter((task) => task.completed === false).length}/
+            {taskState.tasks.length}
+          </p>
+          <p>tasks left</p>
         </div>
-        <p>habits done</p>
+        <div className="flex flex-col items-center">
+          <p>
+            {
+              habitState.habits.filter(
+                (habit) => habit.completedToday === false
+              ).length
+            }
+            /{habitState.habits.length}
+          </p>
+          <p>habits left</p>
+        </div>
       </div>
     </div>
   );

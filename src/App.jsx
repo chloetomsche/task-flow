@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "./components/Header.jsx";
-import TaskPage from "./components/TaskPage.jsx";
-import HabitPage from "./components/HabitPage.jsx";
+import TaskPage from "./pages/TaskPage.jsx";
+import HabitPage from "./pages/HabitPage.jsx";
 import { TaskProvider } from "./context/TaskContext.jsx";
 import { HabitProvider } from "./context/HabitContext.jsx";
 
@@ -11,7 +11,9 @@ function App() {
   return (
     <>
       <TaskProvider>
-        <Header activePage={activePage} setActivePage={setActivePage} />
+        <HabitProvider>
+          <Header activePage={activePage} setActivePage={setActivePage} />
+        </HabitProvider>
       </TaskProvider>
 
       <div className="flex flex-col items-center">

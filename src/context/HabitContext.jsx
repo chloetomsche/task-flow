@@ -6,9 +6,6 @@ export function HabitProvider({ children }) {
   const [stored, setStored] = useLocalStorage("MY_HABITS", []);
   const initialState = {
     habits: stored,
-    //all active and completed
-    filter: "all",
-    search: "",
   };
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -20,7 +17,6 @@ export function HabitProvider({ children }) {
   const value = { state, dispatch };
 
   function reducer(habitState, action) {
-   
     switch (action.type) {
       case "ADD_HABIT":
         const newHabit = {
@@ -38,7 +34,19 @@ export function HabitProvider({ children }) {
       case "REMOVE_HABIT":
         return {
           ...habitState,
-          habits: habitState.habits.filter((habit) => habit.id !== action.payload.id),
+          habits: habitState.habits.filter(
+            (habit) => habit.id !== action.payload.id
+          ),
+        };
+
+      case "TOGGLE_COMPLETED":
+        return {
+          ...habitState,
+          habits: habitState.habits.map((habit) =>
+            habit.id === action.payload.id
+              ? { ...habit, completedToday: !habit.completedToday }
+              : habit
+          ),
         };
     }
   }
@@ -51,7 +59,7 @@ export function HabitProvider({ children }) {
 export function useHabitContext() {
   const context = useContext(HabitContext);
   if (!context) {
-    throw new Error("useTaskContext must be used inside a provider");
+    throw new Error("useHabitContext must be used inside a provider");
   }
   return context;
 }

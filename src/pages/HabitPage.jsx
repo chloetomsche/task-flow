@@ -22,6 +22,8 @@ function HabitPage() {
     setUserInput("");
   };
 
+  console.log(state.habits);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between w-2xl border-2 rounded-sm mt-5 py-4 px-4">
@@ -69,8 +71,28 @@ function HabitPage() {
         </div>
       )}
       {state.habits.map((habit) => (
-        <div className="flex justify-between items-center bg-blue-200 h-20 px-4 rounded-sm">
-          <p className="font-medium">{habit.name}</p>
+        <div className="flex justify-between items-center bg-blue-200 h-24 px-4 rounded-sm">
+          <div className="flex flex-col items-start gap-2">
+            <p className="font-medium text-2xl">{habit.name}</p>
+            <button
+              className={
+                habit.completedToday
+                  ? "bg-yellow-600 cursor-pointer px-2 text-white rounded-sm"
+                  : "bg-yellow-400 px-2 text-white rounded-sm hover:bg-yellow-600 cursor-pointer"
+              }
+              onClick={() =>
+                dispatch({
+                  type: "TOGGLE_COMPLETED",
+                  payload: {
+                    id: habit.id,
+                    completedToday: habit.completedToday,
+                  },
+                })
+              }
+            >
+              {habit.completedToday ? "✓ Done Today" : "Done Today"}
+            </button>
+          </div>
           <button
             className="bg-gray-500 px-2 rounded-sm text-white hover:bg-gray-700 cursor-pointer"
             onClick={() =>

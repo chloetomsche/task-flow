@@ -7,6 +7,7 @@ function TaskPage() {
   const [userInput, setUserInput] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
  
 
   const handleUserInput = (e) => {
