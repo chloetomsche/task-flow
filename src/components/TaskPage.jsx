@@ -7,6 +7,7 @@ function TaskPage() {
   const [userInput, setUserInput] = useState("");
   const [priority, setPriority] = useState("");
   const [category, setCategory] = useState("");
+ 
 
   const handleUserInput = (e) => {
     const input = e.target.value;
@@ -34,6 +35,19 @@ function TaskPage() {
 
     setUserInput("");
   };
+
+  let filteredList;
+
+  if (state.filter === "All") {
+    filteredList = state.tasks;
+  } else if (state.filter === "Active") {
+    filteredList = state.tasks.filter((task) => task.completed === false);
+  } else {
+    filteredList = state.tasks.filter((task) => task.completed === true);
+  }
+  if (state.search) {
+    filteredList = filteredList.filter(task => task.text.toLowerCase().includes(state.search.toLowerCase()))
+  }
 
   console.log(state.tasks);
   return (
@@ -174,35 +188,95 @@ function TaskPage() {
       )}
 
       <div className="flex gap-12">
-        <input
-          className="w-86 border rounded-sm px-2"
-          placeholder="Search tasks..."
-        ></input>
+        <form onSubmit={(e) => e.preventDefault()}>
+          <input
+            className="w-86 border rounded-sm px-2"
+            placeholder="Search tasks..."
+            value={state.search}
+            onChange={(e) => dispatch({type: "SEARCH_TASKS", payload: {
+              search: e.target.value
+            }})}
+          ></input>
+        </form>
         <div className="flex gap-6 border px-3 py-2 rounded-sm">
-          <button className="px-2 hover:bg-gray-300 rounded-xs">All</button>
-          <div className="flex">
-            <button className="px-2 hover:bg-gray-300 rounded-xs">
-              Active
+          <div className="flex gap-1">
+            <button
+              className={
+                state.filter === "All"
+                  ? "px-2 bg-gray-300 rounded-xs"
+                  : "px-2 hover:bg-gray-300 rounded-xs"
+              }
+              onClick={() =>
+                dispatch({
+                  type: "FILTER_STATUS",
+                  payload: {
+                    status: "All",
+                  },
+                })
+              }
+            >
+              All
             </button>
             <p className="flex bg-gray-500 w-4 h-4 rounded-full justify-center text-xs text-white">
               {state.tasks.length}
             </p>
           </div>
-          <button className="px-2 hover:bg-gray-300 rounded-xs">Done</button>
+          <div className="flex gap-1">
+            <button
+              className={
+                state.filter === "Active"
+                  ? "px-2 bg-gray-300 rounded-xs"
+                  : "px-2 hover:bg-gray-300 rounded-xs"
+              }
+              onClick={() =>
+                dispatch({
+                  type: "FILTER_STATUS",
+                  payload: {
+                    status: "Active",
+                  },
+                })
+              }
+            >
+              Active
+            </button>
+            <p className="flex bg-gray-500 w-4 h-4 rounded-full justify-center text-xs text-white">
+              {state.tasks.filter((task) => task.completed === false).length}
+            </p>
+          </div>
+          <button
+            className={
+              state.filter === "Done"
+                ? "px-2 bg-gray-300 rounded-xs"
+                : "px-2 hover:bg-gray-300 rounded-xs"
+            }
+            onClick={() =>
+              dispatch({
+                type: "FILTER_STATUS",
+                payload: {
+                  status: "Done",
+                },
+              })
+            }
+          >
+            Done
+          </button>
         </div>
       </div>
+
       <ul>
-        <div className="flex flex-col gap-4">
-          {state.tasks.map((task) => (
+        <div className="relative flex flex-col gap-4">
+          {filteredList.map((task) => (
             <div className="flex flex-col px-2 w-xl  py-2 border rounded-lg gap-3">
               <div className="flex gap-4">
                 <button
                   className="border bg-gray-100 w-6 h-6 rounded-full hover:bg-gray-300"
                   onClick={() =>
                     dispatch({
-                      type: "REMOVE_TASKS",
+                      type: "TOGGLE_TASK",
                       payload: {
                         id: task.id,
+                        completed: task.completed,
+                        completedAt: task.completedAt,
                       },
                     })
                   }
@@ -211,6 +285,19 @@ function TaskPage() {
                 </button>
                 <li className="font-bold text-black">{task.text}</li>
               </div>
+              <button
+                className="absolute left-96 border rounded-full w-6 h-6 mt-4 bg-red-500 text-white hover:bg-red-900 cursor-pointer"
+                onClick={() =>
+                  dispatch({
+                    type: "REMOVE_TASKS",
+                    payload: {
+                      id: task.id,
+                    },
+                  })
+                }
+              >
+                -
+              </button>
               <div className="flex gap-4">
                 <p>{task.priority}</p>
                 <p>{task.category}</p>

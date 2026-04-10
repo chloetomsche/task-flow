@@ -1,20 +1,22 @@
 import { createContext, useContext, useReducer, useEffect } from "react";
+import  useLocalStorage  from "../hooks/useLocalStorage.js";
 
 const TaskContext = createContext(null);
 
 export function TaskProvider({ children }) {
-  const stored = localStorage.getItem("MY_TASKS");
+  const [storedTasks, setStoredTasks] = useLocalStorage("MY_TASKS", []);
+
   const initialState = {
-    tasks: stored ? JSON.parse(stored) : [],
+    tasks: storedTasks,
     //all active and completed
     filter: "All",
     search: "",
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch };
+  const value = { state, dispatch, initialState };
 
   useEffect(() => {
-    localStorage.setItem("MY_TASKS", JSON.stringify(state.tasks));
+    setStoredTasks(state.tasks);
   }, [state.tasks]);
 
   function reducer(taskState, action) {
@@ -40,7 +42,7 @@ export function TaskProvider({ children }) {
       case "TOGGLE_TASK":
         return {
           ...taskState,
-          tasks: taskState.map((task) =>
+          tasks: taskState.tasks.map((task) =>
             task.id === action.payload.id
               ? {
                   ...task,
@@ -60,7 +62,7 @@ export function TaskProvider({ children }) {
       case "SEARCH_TASKS":
         return {
           ...taskState,
-          search: action.payload.seach,
+          search: action.payload.search,
         };
       default:
         return taskState;

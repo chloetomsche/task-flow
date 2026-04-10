@@ -1,24 +1,33 @@
-import { useState} from "react"; 
-import Header from './components/Header.jsx';
+import { useState } from "react";
+import Header from "./components/Header.jsx";
 import TaskPage from "./components/TaskPage.jsx";
-import HabitPage from "./components/HabitPage.jsx"
+import HabitPage from "./components/HabitPage.jsx";
 import { TaskProvider } from "./context/TaskContext.jsx";
+import { HabitProvider } from "./context/HabitContext.jsx";
 
 function App() {
   const [activePage, setActivePage] = useState("tasks");
 
-  
-  
-
   return (
     <>
-      <Header activePage={activePage} setActivePage={setActivePage} />
+      <TaskProvider>
+        <Header activePage={activePage} setActivePage={setActivePage} />
+      </TaskProvider>
 
-      {activePage === "tasks" &&
-      <TaskProvider><TaskPage /></TaskProvider> }
-      {activePage === "habits" && <HabitPage />}
+      <div className="flex flex-col items-center">
+        {activePage === "tasks" && (
+          <TaskProvider>
+            <TaskPage />
+          </TaskProvider>
+        )}
+        {activePage === "habits" && (
+          <HabitProvider>
+            <HabitPage />
+          </HabitProvider>
+        )}
 
-      <div></div>
+        <div></div>
+      </div>
     </>
   );
 }
