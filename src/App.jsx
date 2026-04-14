@@ -13,23 +13,13 @@ function App() {
       <TaskProvider>
         <HabitProvider>
           <Header activePage={activePage} setActivePage={setActivePage} />
+
+          <div className="flex flex-col items-center">
+            {activePage === "tasks" && <TaskPage />}
+            {activePage === "habits" && <HabitPage />}
+          </div>
         </HabitProvider>
       </TaskProvider>
-
-      <div className="flex flex-col items-center">
-        {activePage === "tasks" && (
-          <TaskProvider>
-            <TaskPage />
-          </TaskProvider>
-        )}
-        {activePage === "habits" && (
-          <HabitProvider>
-            <HabitPage />
-          </HabitProvider>
-        )}
-
-        <div></div>
-      </div>
     </>
   );
 }

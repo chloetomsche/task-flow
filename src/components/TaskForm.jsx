@@ -1,10 +1,37 @@
 import { useTaskContext } from "../context/TaskContext";
 import { priorities } from "../utilities/helpers.js";
-function TaskForm() {
-  const [taskText, setTaskText] = useState("");
+import { categories } from "../utilities/helpers.js";
+import { useState } from "react";
+
+function TaskForm({setShowAddTask}) {
+  const [userInput, setUserInput] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [category, setCategory] = useState("General");
   const { dispatch } = useTaskContext();
+
+  const handleUserInput = (e) => {
+    const input = e.target.value;
+    setUserInput(input);
+  };
+
+  const handleSubmittingTask = () => {
+    dispatch({
+      type: "ADD_TASKS",
+      payload: {
+        id: Math.floor(Math.random() * 1000),
+        text: userInput,
+        category: category,
+        priority: priority,
+        completed: false,
+        createdAt: new Date().toISOString(),
+        completedAt: null,
+      },
+    });
+
+    setShowAddTask(false);
+
+    setUserInput("");
+  };
 
   return (
     <div className="border rounded-lg flex flex-col gap-4 px-4 py-4 w-xl">
@@ -17,80 +44,38 @@ function TaskForm() {
       ></input>
       <div>
         <p>PRIORITY</p>
-        <div>
-            {Object.entries(priorities).map(([index, value]) => (
-                <button key={index}
-                onClick={() => setPriority(index)}
-                className={priority === index ? `${value.bg} ${value.color} ${value.border}` :" bg-red-200 text-red-300 border-red-500"}
-                >{value.label}</button>
-            )
-            )}
+        <div className="flex gap-4">
+          {Object.entries(priorities).map(([index, value]) => (
+            <button
+              key={index}
+              onClick={() => setPriority(index)}
+              className={
+                priority === index
+                  ? `${value.bg} ${value.color} ${value.border} ${value.padding}`
+                  : " bg-gray-400 text-white px-2 rounded-sm cursor-pointer"
+              }
+            >
+              {value.label}
+            </button>
+          ))}
         </div>
-
       </div>
       <div className="">
         <p>CATEGORY</p>
         <div className="flex gap-4">
-          <button
-            className={
-              category === "General"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("General")}
-          >
-            General
-          </button>
-          <button
-            className={
-              category === "Work"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("Work")}
-          >
-            Work
-          </button>
-          <button
-            className={
-              category === "Personal"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("Personal")}
-          >
-            Personal
-          </button>
-          <button
-            className={
-              category === "Health"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("Health")}
-          >
-            Health
-          </button>
-          <button
-            className={
-              category === "Learning"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("Learning")}
-          >
-            Learning
-          </button>
-          <button
-            className={
-              category === "Shopping"
-                ? "border rounded-full px-2 bg-amber-950 text-white cursor-pointer"
-                : "border rounded-full px-2 bg-amber-800 hover:bg-amber-950 text-white cursor-pointer"
-            }
-            onClick={() => setCategory("Shopping")}
-          >
-            Shopping
-          </button>
+          {Object.entries(categories).map(([index, value]) => (
+            <button
+              key={index}
+              onClick={() => setCategory(index)}
+              className={
+                category === index
+                  ? `${value.bg} ${value.color} ${value.border} ${value.padding}`
+                  : " bg-gray-400 text-white px-2 rounded-sm cursor-pointer"
+              }
+            >
+              {value.label}
+            </button>
+          ))}
         </div>
       </div>
       <div className="flex gap-12">
@@ -110,3 +95,5 @@ function TaskForm() {
     </div>
   );
 }
+
+export default TaskForm;

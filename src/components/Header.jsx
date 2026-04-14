@@ -1,9 +1,13 @@
 import { useTaskContext } from "../context/TaskContext.jsx";
 import { useHabitContext } from "../context/HabitContext.jsx";
 
+
 function Header({ activePage, setActivePage }) {
   const { state: taskState } = useTaskContext();
   const { state: habitState } = useHabitContext();
+
+console.log(taskState.tasks);
+console.log(habitState.habits);
 
   return (
     <div className="flex justify-between items-center bg-amber-100 py-5 h-56 px-5">
