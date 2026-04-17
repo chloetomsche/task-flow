@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTaskContext } from "../context/TaskContext.jsx";
 import TaskForm from "../components/TaskForm.jsx";
+import TaskList from "../components/TaskList.jsx";
 
 function TaskPage() {
   const [showAddTask, setShowAddTask] = useState(false);
@@ -26,8 +27,10 @@ function TaskPage() {
     );
   }
 
-  const sortedList = [...filteredList].sort((a,b) => a.completed - b.completed)
-  
+  const sortedList = [...filteredList].sort(
+    (a, b) => a.completed - b.completed
+  );
+
   return (
     <div className="flex flex-col mt-8 ml-8 gap-8">
       <form>
@@ -121,50 +124,8 @@ function TaskPage() {
           </button>
         </div>
       </div>
-
-      <ul>
-        <div className="relative flex flex-col gap-4">
-          {sortedList.map((task) => (
-            <div className="flex flex-col px-2 w-xl  py-2 border rounded-lg gap-3">
-              <div className="flex gap-4">
-                <button
-                  className="border bg-gray-100 w-6 h-6 rounded-full hover:bg-gray-300"
-                  onClick={() =>
-                    dispatch({
-                      type: "TOGGLE_TASK",
-                      payload: {
-                        id: task.id,
-                        completed: task.completed,
-                        completedAt: task.completedAt,
-                      },
-                    })
-                  }
-                >
-                  {task.completed ? "✓" : ""}
-                </button>
-                <li className="font-bold text-black">{task.text}</li>
-              </div>
-              <button
-                className="absolute left-96 border rounded-full w-6 h-6 mt-4 bg-red-500 text-white hover:bg-red-900 cursor-pointer"
-                onClick={() =>
-                  dispatch({
-                    type: "REMOVE_TASKS",
-                    payload: {
-                      id: task.id,
-                    },
-                  })
-                }
-              >
-                -
-              </button>
-              <div className="flex gap-4">
-                <p>{task.priority}</p>
-                <p>{task.category}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ul>
+      <TaskList sortedList={sortedList}/>
+      
     </div>
   );
 }

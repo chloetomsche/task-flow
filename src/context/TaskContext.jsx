@@ -64,6 +64,12 @@ export function TaskProvider({ children }) {
           ...taskState,
           search: action.payload.search,
         };
+        case "EDIT_TASKS":
+          return {
+            ...taskState,
+            tasks: taskState.tasks.map(task => 
+              task.id === action.payload.id ? {...task, text: action.payload.text, priority: action.payload.priority, category: action.payload.category} : task)
+          }
       default:
         return taskState;
     }
