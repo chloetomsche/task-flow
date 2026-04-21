@@ -1,5 +1,5 @@
-import { createContext, useContext, useReducer, useEffect } from "react";
-import  useLocalStorage  from "../hooks/useLocalStorage.js";
+import { createContext, useContext, useReducer, useEffect, useMemo } from "react";
+import useLocalStorage from "../hooks/useLocalStorage.js";
 
 const TaskContext = createContext(null);
 
@@ -13,7 +13,26 @@ export function TaskProvider({ children }) {
     search: "",
   };
   const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch, initialState };
+
+
+  const stats = useMemo(
+    () => ({
+      total: state.tasks.length,
+      completed: state.tasks.filter((task) => task.completed).length,
+      active: state.tasks.filter((task) => !task.completed).length,
+      completionRate:
+        state.tasks.length > 0
+          ? Math.round(
+              (state.tasks.filter((task) => task.completed).length /
+                state.tasks.length) *
+                100
+            )
+          : 0,
+    }),
+    [state.tasks]
+  );
+
+  const value = { state, dispatch, initialState, stats };
 
   useEffect(() => {
     setStoredTasks(state.tasks);
@@ -64,12 +83,20 @@ export function TaskProvider({ children }) {
           ...taskState,
           search: action.payload.search,
         };
-        case "EDIT_TASKS":
-          return {
-            ...taskState,
-            tasks: taskState.tasks.map(task => 
-              task.id === action.payload.id ? {...task, text: action.payload.text, priority: action.payload.priority, category: action.payload.category} : task)
-          }
+      case "EDIT_TASKS":
+        return {
+          ...taskState,
+          tasks: taskState.tasks.map((task) =>
+            task.id === action.payload.id
+              ? {
+                  ...task,
+                  text: action.payload.text,
+                  priority: action.payload.priority,
+                  category: action.payload.category,
+                }
+              : task
+          ),
+        };
       default:
         return taskState;
     }

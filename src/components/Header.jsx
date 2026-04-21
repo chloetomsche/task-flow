@@ -1,20 +1,33 @@
 import { useTaskContext } from "../context/TaskContext.jsx";
 import { useHabitContext } from "../context/HabitContext.jsx";
-
+import ProgressBar from "../UI/ProgressBar.jsx";
 
 function Header({ activePage, setActivePage }) {
+  const { stats } = useTaskContext();
   const { state: taskState } = useTaskContext();
   const { state: habitState } = useHabitContext();
-
-console.log(taskState.tasks);
-console.log(habitState.habits);
 
   return (
     <div className="flex justify-between items-center bg-amber-100 py-5 h-56 px-5">
       <div className="flex flex-col gap-2 ">
         <h1 className="text-3xl font-semibold">Hello!</h1>
-        <p>Date</p>
-        <p>Task Completion</p>
+        <p>Date: {new Date().toLocaleDateString()}</p>
+
+        <div className="flex flex-col gap-3 w-64">
+          <p className="font-medium">Task Completion:</p>
+
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <ProgressBar completed={stats.completed} total={stats.total} />
+            </div>
+
+            {stats.total > 0 && (
+              <p className="text-gray-600 whitespace-nowrap">
+                {stats.completionRate}%
+              </p>
+            )}
+          </div>
+        </div>
         <div className="flex gap-4 mt-4">
           <button
             className={

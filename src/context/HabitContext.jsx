@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useMemo,
+} from "react";
 import useLocalStorage from "../hooks/useLocalStorage.js";
 
 const HabitContext = createContext(null);
@@ -14,7 +20,24 @@ export function HabitProvider({ children }) {
     setStored(state.habits);
   }, [state.habits]);
 
-  const value = { state, dispatch };
+  const stats = useMemo(
+    () => ({
+      total: state.habits.length,
+      completedToday: state.habits.filter((habit) => habit.completedToday).length,
+      active: state.habits.filter((habit) => !habit.completedToday),
+      completionRate:
+        state.habits.length > 0
+          ? Math.round(
+              (state.habits.filter((habit) => habit.completedToday).length /
+                state.habits.length) *
+                100
+            )
+          : 0,
+    }),
+    [state.habits]
+  );
+
+  const value = { state, dispatch, stats };
 
   function reducer(habitState, action) {
     switch (action.type) {
@@ -50,7 +73,8 @@ export function HabitProvider({ children }) {
         };
     }
   }
-
+  console.log("habits:", state.habits);
+  console.log("stats:", stats);
   return (
     <HabitContext.Provider value={value}>{children}</HabitContext.Provider>
   );

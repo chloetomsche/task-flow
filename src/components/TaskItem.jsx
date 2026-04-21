@@ -121,7 +121,7 @@ const TaskItem = ({ task }) => {
               ref={inputRef}
               value={editedText}
               onChange={(e) => setEditedText(e.target.value)}
-              onKeyDown={handleKeyDown}
+              
               className="border rounded-full px-2"
             ></input>
 

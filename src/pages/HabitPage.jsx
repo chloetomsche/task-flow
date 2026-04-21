@@ -1,17 +1,20 @@
 import { useState } from "react";
 import { useHabitContext } from "../context/HabitContext.jsx";
+import ProgressBar from "../UI/ProgressBar.jsx";
+import HabitList from "../components/HabitList.jsx";
 
 function HabitPage() {
   const [showAddHabit, setShowAddHabit] = useState(false);
-  const { state, dispatch } = useHabitContext();
+  const { dispatch, stats } = useHabitContext();
   const [userInput, setUserInput] = useState("");
 
   const handleUserInput = (e) => {
-    const input = e.target.value;
-    setUserInput(input);
+    setUserInput(e.target.value);
   };
 
   const handleAddHabit = () => {
+    if (!userInput.trim()) return;
+
     dispatch({
       type: "ADD_HABIT",
       payload: {
@@ -19,14 +22,14 @@ function HabitPage() {
         name: userInput,
       },
     });
+
+    setShowAddHabit(false);
     setUserInput("");
   };
 
-  console.log(state.habits);
-
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex justify-between w-2xl border-2 rounded-sm mt-5 py-4 px-4">
+    <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto px-4">
+      <div className="flex flex-col md:flex-row justify-between md:items-center w-full border-2 rounded-sm mt-5 py-4 px-4 gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl">Focus Timer</h1>
           <p>Track your work sessions</p>
@@ -41,75 +44,62 @@ function HabitPage() {
         </div>
         <h1>Timer</h1>
       </div>
-      <div className="flex justify-between w-2xl py-4 px-4">
-        <div>
+
+      <div className="flex flex-col md:flex-row justify-between md:items-center w-full py-4 px-4 gap-4">
+        <div className="flex flex-col gap-2 flex-1">
           <h1 className="font-semibold">Daily Habits</h1>
-          <p>... done today</p>
+          <p>Done Today:</p>
+
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <ProgressBar
+                completed={stats.completedToday}
+                total={stats.total}
+              />
+            </div>
+
+            {stats.total > 0 && (
+              <p className="text-gray-600 whitespace-nowrap">
+                {stats.completionRate}%
+              </p>
+            )}
+          </div>
         </div>
 
         <button
-          className="border-2 border-black px-2 rounded-sm hover:bg-black hover:text-white cursor-pointer"
+          className="border-2 border-black px-3 py-1 rounded-sm hover:bg-black hover:text-white cursor-pointer"
           onClick={() => setShowAddHabit(true)}
         >
           + New Habit
         </button>
       </div>
+
       {showAddHabit && (
-        <div className="flex justify-between bg-gray-200 w-2xl py-8 px-4 rounded-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-gray-200 w-full py-6 px-4 rounded-sm">
           <input
-            className="border-2 rounded-full w-96 px-2"
+            className="border-2 rounded-full flex-1 px-3 py-2 min-w-0 bg-white"
             placeholder="add new habit..."
             onChange={handleUserInput}
             value={userInput}
-          ></input>
-          <button
-            className="bg-blue-500 px-2 rounded-sm text-white hover:bg-blue-700 cursor-pointer"
-            onClick={handleAddHabit}
-          >
-            Add
-          </button>
-        </div>
-      )}
-      <div className="grid grid-cols-2 gap-4 mb-10">
-        {state.habits.map((habit) => (
-          <div className="flex justify-between items-center bg-blue-200 h-24 px-4 rounded-sm">
-            <div className="flex flex-col items-start gap-2">
-              <p className="font-medium text-2xl">{habit.name}</p>
-              <button
-                className={
-                  habit.completedToday
-                    ? "bg-yellow-600 cursor-pointer px-2 text-white rounded-sm"
-                    : "bg-yellow-400 px-2 text-white rounded-sm hover:bg-yellow-600 cursor-pointer"
-                }
-                onClick={() =>
-                  dispatch({
-                    type: "TOGGLE_COMPLETED",
-                    payload: {
-                      id: habit.id,
-                      completedToday: habit.completedToday,
-                    },
-                  })
-                }
-              >
-                {habit.completedToday ? "✓ Done Today" : "Done Today"}
-              </button>
-            </div>
+          />
+          <div className="flex gap-2">
             <button
-              className="bg-gray-500 px-2 rounded-sm text-white hover:bg-gray-700 cursor-pointer"
-              onClick={() =>
-                dispatch({
-                  type: "REMOVE_HABIT",
-                  payload: {
-                    id: habit.id,
-                  },
-                })
-              }
+              className="bg-gray-400 px-4 py-2 rounded-sm text-white hover:bg-gray-600 cursor-pointer"
+              onClick={() => setShowAddHabit(false)}
             >
-              Remove
+              Cancel
+            </button>
+            <button
+              className="bg-gray-400 px-4 py-2 rounded-sm text-white hover:bg-gray-600 cursor-pointer"
+              onClick={handleAddHabit}
+            >
+              Add
             </button>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      <HabitList />
     </div>
   );
 }
