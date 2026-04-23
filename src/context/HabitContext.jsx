@@ -46,6 +46,7 @@ export function HabitProvider({ children }) {
           id: action.payload.id,
           name: action.payload.name,
           completedToday: false,
+          icon: action.payload.icon,
           streak: 0,
           bestStreak: 0,
         };
@@ -71,6 +72,7 @@ export function HabitProvider({ children }) {
               : habit
           ),
         };
+        
     }
   }
   console.log("habits:", state.habits);

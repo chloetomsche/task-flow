@@ -7,10 +7,12 @@ function HabitItem({ habit }) {
   return (
     <div className="flex justify-between items-center border min-h-24 px-4 py-4 rounded-sm w-full">
       <div className="flex flex-col items-start gap-2">
-        <p className="font-medium text-xl md:text-2xl break-words">
-          {habit.name}
-        </p>
-
+        <div className="flex gap-3 items-center">
+          <p className="font-medium text-xl md:text-2xl break-words">
+            {habit.name}
+          </p>
+          <p className="border px-2 py-1 rounded-full">{habit.icon}</p>
+        </div>
         <button
           className={
             habit.completedToday

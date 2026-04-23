@@ -2,30 +2,14 @@ import { useState } from "react";
 import { useHabitContext } from "../context/HabitContext.jsx";
 import ProgressBar from "../UI/ProgressBar.jsx";
 import HabitList from "../components/HabitList.jsx";
+import useTimer from "../hooks/useTimer.js";
+import HabitForm from "../components/HabitForm.jsx";
 
 function HabitPage() {
   const [showAddHabit, setShowAddHabit] = useState(false);
-  const { dispatch, stats } = useHabitContext();
-  const [userInput, setUserInput] = useState("");
+  const { stats } = useHabitContext();
 
-  const handleUserInput = (e) => {
-    setUserInput(e.target.value);
-  };
-
-  const handleAddHabit = () => {
-    if (!userInput.trim()) return;
-
-    dispatch({
-      type: "ADD_HABIT",
-      payload: {
-        id: Math.floor(Math.random() * 1000),
-        name: userInput,
-      },
-    });
-
-    setShowAddHabit(false);
-    setUserInput("");
-  };
+  const timer = useTimer();
 
   return (
     <div className="flex flex-col gap-4 w-full max-w-4xl mx-auto px-4">
@@ -33,16 +17,34 @@ function HabitPage() {
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl">Focus Timer</h1>
           <p>Track your work sessions</p>
+          <h1>
+            {String(timer.minutes).padStart(2, "0")}:
+            {String(timer.remainingSeconds).padStart(2, "0")}
+          </h1>
           <div className="flex gap-4">
-            <button className="bg-green-600 text-white px-2 rounded-sm hover:bg-green-800 cursor-pointer">
-              Start
-            </button>
-            <button className="bg-red-600 text-white px-2 rounded-sm hover:bg-red-800 cursor-pointer">
+            {!timer.isRunning ? (
+              <button
+                className="bg-green-600 text-white px-2 rounded-sm hover:bg-green-800 cursor-pointer"
+                onClick={timer.start}
+              >
+                Start
+              </button>
+            ) : (
+              <button
+                className="bg-yellow-600 text-white px-2 rounded-sm hover:bg-green-800 cursor-pointer"
+                onClick={timer.pause}
+              >
+                Pause
+              </button>
+            )}
+            <button
+              className="bg-red-600 text-white px-2 rounded-sm hover:bg-red-800 cursor-pointer"
+              onClick={timer.reset}
+            >
               Reset
             </button>
           </div>
         </div>
-        <h1>Timer</h1>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between md:items-center w-full py-4 px-4 gap-4">
@@ -74,30 +76,7 @@ function HabitPage() {
         </button>
       </div>
 
-      {showAddHabit && (
-        <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 bg-gray-200 w-full py-6 px-4 rounded-sm">
-          <input
-            className="border-2 rounded-full flex-1 px-3 py-2 min-w-0 bg-white"
-            placeholder="add new habit..."
-            onChange={handleUserInput}
-            value={userInput}
-          />
-          <div className="flex gap-2">
-            <button
-              className="bg-gray-400 px-4 py-2 rounded-sm text-white hover:bg-gray-600 cursor-pointer"
-              onClick={() => setShowAddHabit(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="bg-gray-400 px-4 py-2 rounded-sm text-white hover:bg-gray-600 cursor-pointer"
-              onClick={handleAddHabit}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      )}
+      {showAddHabit && <HabitForm setShowAddHabit={setShowAddHabit} />}
 
       <HabitList />
     </div>
