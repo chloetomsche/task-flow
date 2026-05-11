@@ -66,3 +66,61 @@ export const categories = {
     padding: "px-2"
   },
 };
+
+export const emojis = {
+    water: {
+        icon: "💧",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    work: {
+        icon: "💼",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    study: {
+        icon: "👩🏻‍💻",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    cuisine: {
+        icon: "🍴",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    reading: {
+        icon: "📚",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    cleaning: {
+        icon: "🧹",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    bedtime: {
+        icon: "🛏️",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    hobbies: {
+        icon: "❤️",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+    selfcare: {
+        icon: "🌻",
+        bg: "bg-gray-400",
+        padding: "px-2 py-1",
+        border: "rounded-full"
+    },
+
+}

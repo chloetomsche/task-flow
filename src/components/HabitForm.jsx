@@ -1,10 +1,11 @@
 import { useHabitContext } from "../context/HabitContext.jsx";
 import { useState } from "react";
+import { emojis } from "../utilities/helpers.js";
 
 function HabitForm({ setShowAddHabit }) {
   const [userInput, setUserInput] = useState("");
   const { dispatch } = useHabitContext();
-  const [icon, setIcon] = useState('');
+  const [icon, setIcon] = useState("");
 
   const handleUserInput = (e) => {
     setUserInput(e.target.value);
@@ -38,33 +39,19 @@ function HabitForm({ setShowAddHabit }) {
           <p>PICK AN EMOJI</p>
         </div>
         <div className="flex gap-3">
-          <button className={icon === '💧' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('💧')}>
-            💧
-          </button>
-          <button className={icon === '💼' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('💼')}>
-            💼
-          </button>
-          <button className={icon === '👩🏻‍💻' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('👩🏻‍💻')}>
-            👩🏻‍💻
-          </button>
-          <button className={icon === '🍴' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('🍴')}>
-            🍴
-          </button>
-          <button className={icon === '📚' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('📚')}>
-            📚
-          </button>
-          <button className={icon === '🧹' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('🧹')}>
-            🧹
-          </button>
-          <button className={icon === '🛏️' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('🛏️')}>
-            🛏️
-          </button>
-          <button className={icon === '❤️' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('❤️')}>
-            ❤️
-          </button>
-          <button className={icon === '🌻' ? "px-2 py-1 rounded-full bg-gray-400 cursor-pointer":"bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"} onClick={() => setIcon('🌻')}>
-            🌻
-          </button>
+          {Object.entries(emojis).map(([index, value]) => (
+            <button
+              key={index}
+              onClick={() => setIcon(value.icon)}
+              className={
+                icon === value.icon
+                  ? `${value.bg} ${value.padding} ${value.border}`
+                  : "bg-gray-200 px-2 py-1 rounded-full hover:bg-gray-400 cursor-pointer"
+              }
+            >
+              {value.icon}
+            </button>
+          ))}
         </div>
       </div>
       <div className="flex gap-2">

@@ -19,19 +19,22 @@ function useTimer() {
     setSeconds(0);
   };
 
+  console.log("rendered")
   let timer;
 
   useEffect(() => {
     if (isRunning) {
       timer = setInterval(() => {
         setSeconds((prev) => prev + 1);
-    
+        console.log("seconds:", seconds);
       }, 1000);
     }
     return () => {
+        console.log("CLEARING interval ID:", timer);
       clearInterval(timer);
     };
   }, [isRunning]);
+  console.log("new interval ID: ", timer)
 
   return {
     isRunning,
